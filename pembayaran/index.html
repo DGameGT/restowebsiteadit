@@ -4,15 +4,16 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pembayaran - Restoran Kabul</title>
-    <!-- Menggunakan CSS yang disesuaikan dengan tema Restoran Kabul -->
     <link rel="stylesheet" href="styles.css">
-    <!-- Font Awesome untuk ikon -->
+
+    <!-- Font Awesome -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+
+    <!-- Google Font -->
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
 
-    <!-- Main Content -->
     <div class="payment-wrapper">
         <div class="container">
             <header class="payment-header">
@@ -21,7 +22,8 @@
             </header>
 
             <div class="payment-container">
-                <!-- Left Column: Payment Methods -->
+
+                <!-- Left Column -->
                 <div class="payment-methods">
                     <h2>Pilih Metode Pembayaran</h2>
 
@@ -32,24 +34,33 @@
                     </div>
 
                     <div class="tab-content-wrapper">
+
                         <!-- DANA Payment Tab -->
                         <div class="tab-content active" id="dana">
                             <h3>Pembayaran via DANA</h3>
-                            <p>Pembayaran akan diarahkan ke nomor DANA Anda. Pastikan nomor yang dimasukkan aktif.</p>
+                            <p>Silakan lakukan pembayaran langsung melalui aplikasi DANA Anda.</p>
+
+                            <!-- Instruksi pembayaran -->
                             <div class="form-group">
-                                <label for="danaPhone">Nomor Telepon DANA</label>
-                                <input type="tel" id="danaPhone" placeholder="Contoh: 081234567890" required>
+                                <p class="payment-note">
+                                    Harap transfer uang tunai sesuai total pembayaran ke nomor DANA berikut:<br>
+                                    <strong>081818236524</strong><br>
+                                    (Masukkan nomor ini saat melakukan pembayaran)
+                                </p>
                             </div>
+
                             <div class="form-group">
-                                <p class="payment-note">Anda akan menerima notifikasi pembayaran di aplikasi DANA Anda.</p>
+                                <p class="payment-note">
+                                    Setelah pembayaran selesai, silakan klik tombol <strong>Konfirmasi Pembayaran</strong>.
+                                </p>
                             </div>
                         </div>
 
-                        <!-- Bank Transfer Payment Tab -->
+                        <!-- Bank Transfer Tab -->
                         <div class="tab-content" id="bank">
                             <h3>Transfer Bank (Virtual Account)</h3>
                             <p>Pilih bank tujuan untuk mendapatkan Virtual Account number.</p>
-                            
+
                             <div class="form-group">
                                 <label for="bankSelect">Pilih Bank</label>
                                 <select id="bankSelect" required>
@@ -68,41 +79,37 @@
                             </div>
                         </div>
 
-                        <!-- QR Code Payment Tab -->
+                        <!-- QRIS Tab -->
                         <div class="tab-content" id="qr">
                             <h3>Pembayaran via QRIS (Semua E-Wallet)</h3>
-                            <p>Pindai kode QR di bawah ini menggunakan aplikasi pembayaran favorit Anda (Gopay, OVO, ShopeePay, DANA, dll.).</p>
-                            
+                            <p>Pindai kode QR di bawah ini menggunakan aplikasi pembayaran favorit Anda.</p>
+
                             <div class="qr-code-placeholder">
-                                <!-- Placeholder untuk QR Code -->
-                                <img src="https://placehold.co/250x250/212121/ffffff?text=QRIS+Payment" alt="QR Code Placeholder">
+                                <img src="/qris/qr.png" alt="QR Code Placeholder" class="qr-img">
                                 <p><strong>Restoran Kabul - QRIS</strong></p>
                             </div>
 
                             <div class="form-group">
-                                <p class="payment-note">Pastikan jumlah yang dibayarkan sudah sesuai dengan Total Pembayaran di samping.</p>
+                                <p class="payment-note">Pastikan jumlah yang dibayarkan sudah sesuai dengan Total Pembayaran.</p>
                             </div>
                         </div>
+
                     </div>
                 </div>
 
-                <!-- Right Column: Order Summary -->
+                <!-- Right Column -->
                 <div class="order-summary">
                     <h2>Ringkasan Pesanan</h2>
+
                     <div class="summary-details">
                         <div class="summary-item">
                             <span>Subtotal Menu:</span>
                             <span id="summarySubtotal">Rp 0</span>
                         </div>
-                        <div class="summary-item">
-                            <span>Biaya Pengiriman:</span>
-                            <span id="summaryDeliveryFee">Rp 0</span>
-                        </div>
-                        <div class="summary-item">
-                            <span>Pajak (<span id="summaryTaxRate">10</span>%):</span>
-                            <span id="summaryTax">Rp 0</span>
-                        </div>
+
+
                         <div class="summary-separator"></div>
+
                         <div class="summary-item total-final">
                             <strong>Total Pembayaran:</strong>
                             <strong id="summaryTotal">Rp 0</strong>
@@ -113,20 +120,19 @@
                         <i class="fas fa-clock"></i> Batas Waktu Pembayaran: <span id="timer">00:15:00</span>
                     </div>
 
-                    <button class="btn btn-primary btn-full pay-button" onclick="alert('Simulasi pembayaran berhasil! Anggap saja halaman ini sudah dikirim ke backend, Dika-Kun! 😉')">
+                    <button class="btn btn-primary btn-full pay-button" onclick="alert('Simulasi pembayaran berhasil!')">
                         Konfirmasi Pembayaran
                     </button>
                 </div>
+
             </div>
         </div>
     </div>
 
-    <!-- Simple Footer for Context -->
     <footer class="payment-footer">
         <p>&copy; 2024 Restoran Kabul. Pembayaran Diproses Aman.</p>
     </footer>
 
-    <!-- Menggunakan script.js eksternal -->
     <script src="script.js"></script>
 </body>
 </html>

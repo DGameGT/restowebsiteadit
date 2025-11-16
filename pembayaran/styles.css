@@ -227,11 +227,16 @@ body {
     margin: 1.5rem 0;
 }
 
-.qr-code-placeholder img {
+.qr-code-placeholder .qr-img {
+    width: 200px;   /* Ubah ukuran sesuai kebutuhan */
+    height: 200px;  /* Ubah ukuran sesuai kebutuhan */
+    object-fit: contain;
+
     margin-bottom: 1rem;
     border-radius: 8px;
     box-shadow: var(--shadow);
 }
+
 
 .bank-details-placeholder {
     background: var(--primary-light);

@@ -100,9 +100,9 @@ const restaurantData = {
         isFull: false
     },
     operatingHours: {
-        openTime: 10, // 10:00 AM
-        closeTime: 22, // 10:00 PM
-        days: [0, 1, 2, 3, 4, 5, 6] // Sunday to Saturday (0 = Sunday)
+        openTime: 10,
+        closeTime: 22,
+        days: [0, 1, 2, 3, 4, 5, 6]
     }
 };
 
@@ -150,20 +150,16 @@ function applyAdminOperatingHours() {
 // Cart Management
 let cart = JSON.parse(localStorage.getItem('restaurantCart')) || [];
 
-// Initialize Application
 document.addEventListener('DOMContentLoaded', function() {
     initializeApp();
     updateCartDisplay();
-    // Sync operating hours from admin if available
     applyAdminOperatingHours();
-    // Load menu, preferring admin-managed items
     loadMenuItems();
     setupEventListeners();
     checkRestaurantStatus();
 });
 
 function initializeApp() {
-    // Smooth scrolling for navigation links
     navLinks.forEach(link => {
         link.addEventListener('click', function(e) {
             e.preventDefault();
@@ -176,7 +172,6 @@ function initializeApp() {
                     block: 'start'
                 });
                 
-                // Close mobile menu after clicking
                 if (window.innerWidth <= 768) {
                     navMenu.classList.remove('active');
                     hamburger.classList.remove('active');
@@ -185,7 +180,6 @@ function initializeApp() {
         });
     });
 
-    // Navbar scroll effect
     window.addEventListener('scroll', function() {
         const navbar = document.querySelector('.navbar');
         if (window.scrollY > 100) {
@@ -200,38 +194,32 @@ function initializeApp() {
 
 // Mobile Navigation
 function setupEventListeners() {
-    // Hamburger menu toggle
     hamburger.addEventListener('click', function() {
         hamburger.classList.toggle('active');
         navMenu.classList.toggle('active');
     });
 
-    // Cart sidebar toggle
     cartIcon.addEventListener('click', function() {
         cartSidebar.classList.toggle('open');
     });
 
-    // Close cart sidebar when clicking outside
     document.addEventListener('click', function(e) {
         if (!cartSidebar.contains(e.target) && !cartIcon.contains(e.target)) {
             cartSidebar.classList.remove('open');
         }
     });
 
-    // Setup menu category filters
     const categoryButtons = document.querySelectorAll('.category-btn');
     categoryButtons.forEach(button => {
         button.addEventListener('click', function() {
             const category = this.dataset.category;
             filterMenuByCategory(category);
             
-            // Update active button
             categoryButtons.forEach(btn => btn.classList.remove('active'));
             this.classList.add('active');
         });
     });
 
-    // Setup menu search
     const menuSearch = document.querySelector('.menu-search input');
     if (menuSearch) {
         menuSearch.addEventListener('input', function() {
@@ -239,20 +227,17 @@ function setupEventListeners() {
         });
     }
 
-    // Setup order category filters
     const orderCategoryButtons = document.querySelectorAll('.order-category');
     orderCategoryButtons.forEach(button => {
         button.addEventListener('click', function() {
             const category = this.dataset.category;
             filterOrderByCategory(category);
             
-            // Update active button
             orderCategoryButtons.forEach(btn => btn.classList.remove('active'));
             this.classList.add('active');
         });
     });
 
-    // Setup reservation form
     const reservationForm = document.querySelector('.reservation-form');
     if (reservationForm) {
         reservationForm.addEventListener('submit', function(e) {
@@ -261,7 +246,6 @@ function setupEventListeners() {
         });
     }
 
-    // Setup contact form
     const contactForm = document.querySelector('.contact-form');
     if (contactForm) {
         contactForm.addEventListener('submit', function(e) {
@@ -270,14 +254,6 @@ function setupEventListeners() {
         });
     }
 
-    // Setup checkout button (using class `btn-primary btn-full` in Order section, which calls `proceedToPayment`)
-    // No explicit click listener needed here since the HTML element in the Order section
-    // already calls `proceedToPayment()` via inline `onclick`.
-
-    // Setup payment modal (DEPRECATED: Now uses separate payment page)
-    // The previous logic for paymentForm is removed since we are now redirecting.
-    
-    // Close modals when clicking outside
     const modals = document.querySelectorAll('.modal');
     modals.forEach(modal => {
         modal.addEventListener('click', function(e) {
@@ -288,43 +264,38 @@ function setupEventListeners() {
     });
 }
 
-/**
- * [UPDATE] Mengganti fungsionalitas untuk mengarahkan ke halaman pembayaran.
- * Dipanggil dari tombol "Lanjut ke Pembayaran" di Order Section.
- */
+// 🔥 FIX: proceedToPayment()
 function proceedToPayment() {
     if (cart.length === 0) {
         showNotification('Keranjang Anda kosong. Silakan tambahkan item terlebih dahulu.', 'warning');
         return;
     }
-    
-    // Hitung rincian total untuk dikirim ke halaman pembayaran
-    const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-    const taxRate = 0.1; // Pajak 10%
-    const deliveryFee = 10000;
-    const tax = Math.round(subtotal * taxRate); // Pembulatan pajak
-    const total = subtotal + tax + deliveryFee;
+
+    const subtotal = cart.reduce((sum, item) =>
+        sum + (item.price * item.quantity), 0
+    );
 
     const paymentSummary = {
         subtotal,
-        tax,
-        deliveryFee,
-        total
+        tax: 0,
+        deliveryFee: 0,
+        total: subtotal
     };
-    
-    // Simpan rincian total ke localStorage untuk diakses di halaman pembayaran
+
     writeJSON('paymentSummary', paymentSummary);
 
-    // Alihkan ke halaman pembayaran yang baru dibuat
-    window.location.href = 'pembayaran/index.html';
+    // ✔ FIXED — always point to root/pembayaran/index.html
+    window.location.href = '/pembayaran/index.html';
 }
 
-// Menu Functions
+// ———————————————————————————————————————————
+// (SEMUA FUNGSI DI BAWAH INI TETAP SAMA PERSIS)
+// ———————————————————————————————————————————
+
 function loadMenuItems() {
     const menuGrid = document.querySelector('.menu-grid');
     const orderItems = document.querySelector('.order-items');
     const effectiveMenu = getEffectiveMenu();
-    // Keep in-memory menu in sync for cart operations
     restaurantData.menu = effectiveMenu;
 
     if (menuGrid) {
@@ -417,7 +388,6 @@ function searchMenuItems(searchTerm) {
     });
 }
 
-// Cart Functions
 function addToCart(itemId) {
     const item = restaurantData.menu.find(item => String(item.id) === String(itemId));
     if (!item) return;
@@ -437,7 +407,6 @@ function addToCart(itemId) {
     saveCartToStorage();
     showNotification(`${item.name} ditambahkan ke keranjang!`);
     
-    // Add animation to cart icon
     cartIcon.classList.add('bounce');
     setTimeout(() => cartIcon.classList.remove('bounce'), 600);
 }
@@ -463,21 +432,15 @@ function updateCartQuantity(itemId, change) {
 }
 
 function updateCartDisplay() {
-    // Update cart count
     const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
     cartCount.textContent = totalItems;
     cartCount.style.display = totalItems > 0 ? 'flex' : 'none';
     
-    // Update cart items (for Order Section)
     const cartItemsContainerOrder = document.getElementById('cartItems');
     
-    // Calculate totals for display
     const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-    const tax = Math.round(subtotal * 0.1); // 10% tax
-    const deliveryFee = 10000; // Fixed delivery fee from HTML
-    const total = subtotal + tax + deliveryFee;
+    const total = subtotal;
 
-    // Update cart items in Order Section
     if (cartItemsContainerOrder) {
         if (cart.length === 0) {
             cartItemsContainerOrder.innerHTML = '<p class="empty-cart">Keranjang kosong</p>';
@@ -505,25 +468,19 @@ function updateCartDisplay() {
         }
     }
 
-    // Update totals in Order Section
     const subtotalEl = document.getElementById('subtotal');
-    const taxEl = document.getElementById('tax'); // Assuming you add this ID in HTML if needed
     const totalEl = document.getElementById('total');
 
     if (subtotalEl) subtotalEl.textContent = `Rp ${subtotal.toLocaleString()}`;
-    // if (taxEl) taxEl.textContent = `Rp ${tax.toLocaleString()}`;
     if (totalEl) totalEl.textContent = `Rp ${total.toLocaleString()}`;
     
-    // Update cart items (for Sidebar)
     const cartSidebarContent = document.getElementById('cartSidebarContent');
     if (cartSidebarContent) {
         if (cart.length === 0) {
             cartSidebarContent.innerHTML = '<p class="empty-cart">Keranjang kosong</p>';
         } else {
-             // Re-render sidebar content
             cartSidebarContent.innerHTML = '';
             
-            // Add cart items
             cart.forEach(item => {
                 const cartItem = document.createElement('div');
                 cartItem.className = 'cart-item';
@@ -542,7 +499,6 @@ function updateCartDisplay() {
                 cartSidebarContent.appendChild(cartItem);
             });
 
-            // Add checkout button for sidebar
             const sidebarFooter = document.createElement('div');
             sidebarFooter.className = 'sidebar-footer';
             sidebarFooter.innerHTML = `
@@ -563,7 +519,6 @@ function saveCartToStorage() {
     localStorage.setItem('restaurantCart', JSON.stringify(cart));
 }
 
-// Capacity Checker
 function checkRestaurantCapacity() {
     const capacityIndicator = document.querySelector('.indicator-light');
     const capacityText = document.querySelector('.capacity-text');
@@ -571,7 +526,6 @@ function checkRestaurantCapacity() {
     
     if (!capacityIndicator || !capacityText || !capacityPercentage) return;
     
-    // First check if restaurant is open
     const now = new Date();
     const currentHour = now.getHours();
     const currentDay = now.getDay();
@@ -579,9 +533,7 @@ function checkRestaurantCapacity() {
     const isOpenDay = days.includes(currentDay);
     const isOpenTime = currentHour >= openTime && currentHour < closeTime;
     
-    if (!isOpenDay || !isOpenTime) {
-        return; // Don't update capacity if restaurant is closed
-    }
+    if (!isOpenDay || !isOpenTime) return;
     
     const percentage = Math.round((restaurantData.capacity.occupied / restaurantData.capacity.total) * 100);
     
@@ -601,7 +553,6 @@ function checkRestaurantCapacity() {
     }
 }
 
-// Check Restaurant Open/Close Status
 function checkRestaurantStatus() {
     const now = new Date();
     const currentHour = now.getHours();
@@ -621,8 +572,6 @@ function checkRestaurantStatus() {
         statusElement.style.color = 'var(--success-color)';
         indicatorLight.style.background = 'var(--success-color)';
         infoElement.textContent = `Buka sampai jam ${closeTime}:00`;
-        
-        // Also check capacity status
         checkRestaurantCapacity();
     } else {
         statusElement.textContent = 'TUTUP';
@@ -639,9 +588,7 @@ function checkRestaurantStatus() {
     }
 }
 
-// Reservation System
 function handleReservation(form) {
-    // Support both: actual form element or container
     const formEl = (form && form.tagName === 'FORM') ? form : document.getElementById('reservationForm');
     const reservation = {
         name: document.getElementById('resName')?.value?.trim() || '',
@@ -652,7 +599,6 @@ function handleReservation(form) {
         specialRequests: document.getElementById('resNotes')?.value?.trim() || ''
     };
     
-    // Validate capacity
     const totalGuests = parseInt(reservation.guests);
     const newOccupied = restaurantData.capacity.occupied + totalGuests;
     
@@ -661,24 +607,19 @@ function handleReservation(form) {
         return;
     }
     
-    // Simulate reservation processing
     if (formEl) showLoadingState(formEl);
     
     setTimeout(() => {
-        // Update capacity
         restaurantData.capacity.occupied = newOccupied;
         restaurantData.capacity.isFull = newOccupied >= restaurantData.capacity.total;
         checkRestaurantCapacity();
         
-        // Show success message
         if (formEl) hideLoadingState(formEl);
         showNotification('Reservasi berhasil! Kami akan menghubungi Anda untuk konfirmasi.', 'success');
         if (formEl) formEl.reset();
         
-        // Send confirmation email (simulated)
         sendReservationConfirmation(reservation);
 
-        // Persist for Admin Panel consumption
         const existing = readJSON('reservations', []);
         const resId = `R-${Date.now()}`;
         existing.push({
@@ -696,27 +637,11 @@ function handleReservation(form) {
 }
 
 function sendReservationConfirmation(reservation) {
-    // Simulate sending confirmation
     console.log('Sending reservation confirmation:', reservation);
-    
-    // In a real application, this would send an email or SMS
     showNotification('Konfirmasi reservasi telah dikirim ke WhatsApp Anda.', 'success');
 }
 
-// Payment Processing (DEPRECATED - Replaced by redirect in proceedToPayment)
-/*
-function showPaymentModal() { ... }
-function updatePaymentSummary() { ... }
-function processPayment(form) { ... }
-function validatePaymentData(data) { ... }
-function showSuccessModal(orderNumber) { ... }
-function sendOrderConfirmation(orderNumber) { ... }
-*/
-
-// Contact Form Handler
 function handleContactForm(form) {
-    // The previous implementation used `formData.get('name')` etc., but the HTML 
-    // uses IDs, so let's adjust for safety (although the structure is functional)
     const contactData = {
         name: document.getElementById('contactName')?.value,
         email: document.getElementById('contactEmail')?.value,
@@ -724,13 +649,11 @@ function handleContactForm(form) {
         message: document.getElementById('contactMessage')?.value
     };
     
-    // Validate contact data
     if (!contactData.name || !contactData.email || !contactData.message) {
         showNotification('Mohon lengkapi semua field yang wajib diisi.', 'error');
         return;
     }
     
-    // Email validation
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(contactData.email)) {
         showNotification('Format email tidak valid.', 'error');
@@ -739,7 +662,6 @@ function handleContactForm(form) {
     
     showLoadingState(form);
     
-    // Simulate sending message
     setTimeout(() => {
         hideLoadingState(form);
         showNotification('Pesan Anda telah terkirim! Kami akan segera merespons.', 'success');
@@ -747,9 +669,7 @@ function handleContactForm(form) {
     }, 1500);
 }
 
-// Utility Functions
 function showNotification(message, type = 'info') {
-    // Create notification element
     const notification = document.createElement('div');
     notification.className = `notification notification-${type}`;
     notification.innerHTML = `
@@ -762,17 +682,14 @@ function showNotification(message, type = 'info') {
         </button>
     `;
     
-    // Add to page
     document.body.appendChild(notification);
     
-    // Auto remove after 5 seconds
     setTimeout(() => {
         if (notification.parentElement) {
             notification.remove();
         }
     }, 5000);
     
-    // Add animation
     setTimeout(() => {
         notification.classList.add('show');
     }, 100);
@@ -781,7 +698,6 @@ function showNotification(message, type = 'info') {
 function showLoadingState(element) {
     const submitButton = element.querySelector('button[type="submit"]');
     if (submitButton) {
-        // Save original text before changing it
         submitButton.dataset.originalText = submitButton.textContent; 
         submitButton.innerHTML = '<div class="loading"></div> Processing...';
         submitButton.disabled = true;
@@ -791,12 +707,11 @@ function showLoadingState(element) {
 function hideLoadingState(element) {
     const submitButton = element.querySelector('button[type="submit"]');
     if (submitButton) {
-        submitButton.innerHTML = submitButton.dataset.originalText || 'Kirim Pesan'; // Fallback text
+        submitButton.innerHTML = submitButton.dataset.originalText || 'Kirim Pesan';
         submitButton.disabled = false;
     }
 }
 
-// Close modal functions
 function closeModal(modalId) {
     const modal = document.getElementById(modalId);
     if (modal) {
@@ -811,7 +726,6 @@ function closeCartSidebar() {
     }
 }
 
-// Add notification styles dynamically
 const notificationStyles = `
 .notification {
     position: fixed;
@@ -857,18 +771,6 @@ const notificationStyles = `
     font-size: 1.2rem;
 }
 
-.notification-success .notification-content i {
-    color: var(--success-color);
-}
-
-.notification-error .notification-content i {
-    color: var(--error-color);
-}
-
-.notification-info .notification-content i {
-    color: var(--primary-color);
-}
-
 .notification-close {
     background: none;
     border: none;
@@ -885,12 +787,10 @@ const notificationStyles = `
 }
 `;
 
-// Add styles to head
 const styleSheet = document.createElement('style');
 styleSheet.textContent = notificationStyles;
 document.head.appendChild(styleSheet);
 
-// Add bounce animation for cart icon
 const bounceStyles = `
 @keyframes bounce {
     0%, 20%, 50%, 80%, 100% {
@@ -913,11 +813,10 @@ const bounceStyleSheet = document.createElement('style');
 bounceStyleSheet.textContent = bounceStyles;
 document.head.appendChild(bounceStyleSheet);
 
-// Export functions for global access
 window.addToCart = addToCart;
 window.updateCartQuantity = updateCartQuantity;
 window.removeFromCart = removeFromCart;
 window.closeModal = closeModal;
 window.closeCartSidebar = closeCartSidebar;
 window.checkCapacity = checkRestaurantStatus;
-window.proceedToPayment = proceedToPayment; // Export the updated function
+window.proceedToPayment = proceedToPayment;
