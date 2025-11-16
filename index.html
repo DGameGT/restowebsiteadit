@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Restoran Kabul - Restoran Modern & Elegan</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <h2>Restoran Kabul</h2>
+            </div>
+            <ul class="nav-menu">
+                <li class="nav-item"><a href="#home" class="nav-link">Beranda</a></li>
+                <li class="nav-item"><a href="#menu" class="nav-link">Menu</a></li>
+                <li class="nav-item"><a href="#order" class="nav-link">Pesan Online</a></li>
+                <li class="nav-item"><a href="#reservation" class="nav-link">Reservasi</a></li>
+                <li class="nav-item"><a href="#about" class="nav-link">Tentang</a></li>
+                <li class="nav-item"><a href="#contact" class="nav-link">Kontak</a></li>
+            </ul>
+            <div class="nav-icons">
+                <div class="cart-icon" id="cartIcon">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span class="cart-count" id="cartCount">0</span>
+                </div>
+                <div class="hamburger" id="hamburger">
+                    <span class="bar"></span>
+                    <span class="bar"></span>
+                    <span class="bar"></span>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="home" class="hero">
+        <div class="hero-content">
+            <h1 class="hero-title">Selamat Datang di Restoran Kabul</h1>
+            <p class="hero-subtitle">Nikmati pengalaman kuliner terbaik dengan hidangan istimewa kami</p>
+            <div class="hero-buttons">
+                <button class="btn btn-primary" onclick="scrollToSection('menu')">Lihat Menu</button>
+                <button class="btn btn-secondary" onclick="scrollToSection('order')">Pesan Sekarang</button>
+            </div>
+        </div>
+        <div class="hero-image">
+            <img src="https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1200&q=80" alt="Restoran Interior">
+        </div>
+    </section>
+
+    <!-- Capacity Checker -->
+    <section class="capacity-checker">
+        <div class="container">
+            <div class="capacity-card">
+                <h3>Status Restoran</h3>
+                <div class="capacity-indicator">
+                    <div class="indicator-light" id="capacityLight"></div>
+                    <span id="capacityStatus">Memuat...</span>
+                </div>
+                <p id="capacityInfo">Klik untuk refresh status</p>
+                <button class="btn btn-outline" onclick="checkCapacity()">Cek Status</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Menu Section -->
+    <section id="menu" class="menu-section">
+        <div class="container">
+            <h2 class="section-title">Menu Spesial Kami</h2>
+            <div class="menu-categories">
+                <button class="category-btn active" data-category="all">Semua</button>
+                <button class="category-btn" data-category="appetizer">Appetizer</button>
+                <button class="category-btn" data-category="main-course">Hidangan Utama</button>
+                <button class="category-btn" data-category="dessert">Pencuci Mulut</button>
+                <button class="category-btn" data-category="beverage">Minuman</button>
+            </div>
+            <div class="menu-search">
+                <input type="text" id="menuSearch" placeholder="Cari menu...">
+                <i class="fas fa-search"></i>
+            </div>
+            <div class="menu-grid" id="menuGrid">
+                <!-- Menu items will be populated by JavaScript -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Online Order Section -->
+    <section id="order" class="order-section">
+        <div class="container">
+            <h2 class="section-title">Pesan Online</h2>
+            <div class="order-container">
+                <div class="order-menu">
+                    <h3>Pilih Menu</h3>
+                    <div class="order-categories">
+                        <button class="order-category active" data-category="all">Semua</button>
+                        <button class="order-category" data-category="appetizer">Appetizer</button>
+                        <button class="order-category" data-category="main-course">Utama</button>
+                        <button class="order-category" data-category="dessert">Dessert</button>
+                        <button class="order-category" data-category="beverage">Minuman</button>
+                    </div>
+                    <div class="order-items" id="orderItems">
+                        <!-- Order items will be populated by JavaScript -->
+                    </div>
+                </div>
+                <div class="order-cart">
+                    <h3>Keranjang Pesanan</h3>
+                    <div class="cart-items" id="cartItems">
+                        <p class="empty-cart">Keranjang kosong</p>
+                    </div>
+                    <div class="cart-total">
+                        <div class="total-row">
+                            <span>Subtotal:</span>
+                            <span id="subtotal">Rp 0</span>
+                        </div>
+                        <div class="total-row">
+                            <span>Biaya Pengiriman:</span>
+                            <span id="deliveryFee">Rp 10.000</span>
+                        </div>
+                        <div class="total-row final">
+                            <span>Total:</span>
+                            <span id="total">Rp 10.000</span>
+                        </div>
+                    </div>
+                    <button class="btn btn-primary btn-full" onclick="proceedToPayment()">Lanjut ke Pembayaran</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Reservation Section -->
+    <section id="reservation" class="reservation-section">
+        <div class="container">
+            <h2 class="section-title">Reservasi Meja</h2>
+            <div class="reservation-container">
+                <div class="reservation-form">
+                    <form id="reservationForm">
+                        <div class="form-group">
+                            <label for="resName">Nama Lengkap</label>
+                            <input type="text" id="resName" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="resPhone">Nomor Telepon</label>
+                            <input type="tel" id="resPhone" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="resDate">Tanggal</label>
+                            <input type="date" id="resDate" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="resTime">Waktu</label>
+                            <select id="resTime" required>
+                                <option value="">Pilih Waktu</option>
+                                <option value="10:00">10:00</option>
+                                <option value="11:00">11:00</option>
+                                <option value="12:00">12:00</option>
+                                <option value="13:00">13:00</option>
+                                <option value="18:00">18:00</option>
+                                <option value="19:00">19:00</option>
+                                <option value="20:00">20:00</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="resGuests">Jumlah Tamu</label>
+                            <select id="resGuests" required>
+                                <option value="">Pilih Jumlah</option>
+                                <option value="1">1 Orang</option>
+                                <option value="2">2 Orang</option>
+                                <option value="3-4">3-4 Orang</option>
+                                <option value="5-6">5-6 Orang</option>
+                                <option value="7+">7+ Orang</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="resNotes">Catatan Khusus (Opsional)</label>
+                            <textarea id="resNotes" rows="3"></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Pesan Meja</button>
+                    </form>
+                </div>
+                <div class="reservation-info">
+                    <h3>Informasi Reservasi</h3>
+                    <div class="info-item">
+                        <i class="fas fa-clock"></i>
+                        <div>
+                            <h4>Jam Operasional</h4>
+                            <p>Senin - Minggu: 10:00 - 22:00</p>
+                        </div>
+                    </div>
+                    <div class="info-item">
+                        <i class="fas fa-phone"></i>
+                        <div>
+                            <h4>Kontak</h4>
+                            <p>0812-3456-7890</p>
+                        </div>
+                    </div>
+                    <div class="info-item">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <div>
+                            <h4>Alamat</h4>
+                            <p>Jl. Sudirman No. 123, Jakarta</p>
+                        </div>
+                    </div>
+                    <div class="capacity-status">
+                        <h4>Status Meja</h4>
+                        <div id="tableStatus">Memuat status meja...</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Payment Modal -->
+    <div id="paymentModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Pembayaran</h3>
+                <span class="close" onclick="closePaymentModal()">&times;</span>
+            </div>
+            <div class="modal-body">
+                <div class="payment-summary">
+                    <h4>Ringkasan Pesanan</h4>
+                    <div id="orderSummary"></div>
+                    <div class="payment-total">
+                        <strong>Total: <span id="paymentTotal"></span></strong>
+                    </div>
+                </div>
+                <div class="payment-methods">
+                    <h4>Metode Pembayaran</h4>
+                    <div class="payment-option">
+                        <input type="radio" name="payment" id="cash" value="cash">
+                        <label for="cash">Bayar di Tempat (Cash)</label>
+                    </div>
+                    <div class="payment-option">
+                        <input type="radio" name="payment" id="transfer" value="transfer">
+                        <label for="transfer">Transfer Bank</label>
+                    </div>
+                    <div class="payment-option">
+                        <input type="radio" name="payment" id="e-wallet" value="e-wallet">
+                        <label for="e-wallet">E-Wallet (OVO, Gopay, Dana)</label>
+                    </div>
+                </div>
+                <div class="delivery-info">
+                    <h4>Informasi Pengiriman</h4>
+                    <div class="form-group">
+                        <label for="deliveryAddress">Alamat Pengiriman</label>
+                        <textarea id="deliveryAddress" rows="3" required></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="deliveryPhone">Nomor Telepon</label>
+                        <input type="tel" id="deliveryPhone" required>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closePaymentModal()">Batal</button>
+                <button class="btn btn-primary" onclick="processPayment()">Bayar Sekarang</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- About Section -->
+    <section id="about" class="about-section">
+        <div class="container">
+            <h2 class="section-title">Tentang Restoran Kabul</h2>
+            <div class="about-content">
+                <div class="about-text">
+                    <p>Selamat datang di Restoran Kabul, tempat di mana cita rasa autentik bertemu dengan suasana modern yang elegan. Sejak berdiri pada tahun 2020, kami telah berkomitmen untuk menyajikan hidangan berkualitas tinggi dengan bahan-bahan segar dan resep tradisional yang telah turun-temurun.</p>
+                    <p>Kami percaya bahwa makanan bukan hanya soal rasa, tetapi juga tentang pengalaman. Setiap hidangan yang kami sajikan dibuat dengan penuh cinta dan perhatian terhadap detail, untuk memastikan setiap tamu kami mendapatkan pengalaman kuliner yang tak terlupakan.</p>
+                    <div class="about-features">
+                        <div class="feature">
+                            <i class="fas fa-utensils"></i>
+                            <h4>Hidangan Berkualitas</h4>
+                            <p>Menggunakan bahan segar dan resep autentik</p>
+                        </div>
+                        <div class="feature">
+                            <i class="fas fa-users"></i>
+                            <h4>Pelayanan Ramah</h4>
+                            <p>Staf terlatih siap melayani dengan senyuman</p>
+                        </div>
+                        <div class="feature">
+                            <i class="fas fa-award"></i>
+                            <h4>Berpengalaman</h4>
+                            <p>Lebih dari 3 tahun melayani pelanggan</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="about-image">
+                    <img src="https://images.unsplash.com/photo-1552566626-52f8b828add9?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1200&q=80" alt="Tentang Kami">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="contact-section">
+        <div class="container">
+            <h2 class="section-title">Hubungi Kami</h2>
+            <div class="contact-content">
+                <div class="contact-info">
+                    <div class="contact-item">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <div>
+                            <h4>Alamat</h4>
+                            <p>Jl. Sudirman No. 123<br>Jakarta Pusat, 10220</p>
+                        </div>
+                    </div>
+                    <div class="contact-item">
+                        <i class="fas fa-phone"></i>
+                        <div>
+                            <h4>Telepon</h4>
+                            <p>0812-3456-7890<br>021-1234-5678</p>
+                        </div>
+                    </div>
+                    <div class="contact-item">
+                        <i class="fas fa-envelope"></i>
+                        <div>
+                            <h4>Email</h4>
+                            <p>info@restorankabul.com<br>reservasi@restorankabul.com</p>
+                        </div>
+                    </div>
+                    <div class="contact-item">
+                        <i class="fas fa-clock"></i>
+                        <div>
+                            <h4>Jam Operasional</h4>
+                            <p>Senin - Minggu<br>10:00 - 22:00</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="contact-form">
+                    <form id="contactForm">
+                        <div class="form-group">
+                            <label for="contactName">Nama</label>
+                            <input type="text" id="contactName" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="contactEmail">Email</label>
+                            <input type="email" id="contactEmail" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="contactSubject">Subjek</label>
+                            <input type="text" id="contactSubject" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="contactMessage">Pesan</label>
+                            <textarea id="contactMessage" rows="5" required></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Kirim Pesan</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>Restoran Kabul</h3>
+                    <p>Restoran modern dengan hidangan berkualitas tinggi dan pelayanan terbaik. Nikmati pengalaman kuliner yang tak terlupakan bersama kami.</p>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-facebook"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-youtube"></i></a>
+                    </div>
+                </div>
+                <div class="footer-section">
+                    <h4>Menu Cepat</h4>
+                    <ul>
+                        <li><a href="#home">Beranda</a></li>
+                        <li><a href="#menu">Menu</a></li>
+                        <li><a href="#order">Pesan Online</a></li>
+                        <li><a href="#reservation">Reservasi</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Layanan</h4>
+                    <ul>
+                        <li><a href="#">Pesan Antar</a></li>
+                        <li><a href="#">Reservasi Meja</a></li>
+                        <li><a href="#">Katering</a></li>
+                        <li><a href="#">Event</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Kontak</h4>
+                    <ul>
+                        <li><i class="fas fa-map-marker-alt"></i> Jl. Sudirman No. 123</li>
+                        <li><i class="fas fa-phone"></i> 0812-3456-7890</li>
+                        <li><i class="fas fa-envelope"></i> info@restorankabul.com</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 Restoran Kabul. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Cart Sidebar -->
+    <div id="cartSidebar" class="cart-sidebar">
+        <div class="cart-header">
+            <h3>Keranjang</h3>
+            <span class="close-cart" onclick="closeCartSidebar()">&times;</span>
+        </div>
+        <div class="cart-content" id="cartSidebarContent">
+            <!-- Cart content will be populated by JavaScript -->
+        </div>
+    </div>
+
+    <!-- Success Modal -->
+    <div id="successModal" class="modal">
+        <div class="modal-content success-modal">
+            <div class="success-icon">
+                <i class="fas fa-check-circle"></i>
+            </div>
+            <h3 id="successTitle">Berhasil!</h3>
+            <p id="successMessage">Operasi berhasil dilakukan.</p>
+            <button class="btn btn-primary" onclick="closeSuccessModal()">Tutup</button>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Admin - Restoran Kabul</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="admin-styles.css">
+</head>
+<body>
+    <div class="admin-dashboard">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">
+                    <i class="fas fa-utensils"></i>
+                    <span>Restoran Kabul</span>
+                </div>
+            </div>
+            
+            <nav class="sidebar-nav">
+                <ul class="nav-menu">
+                    <li class="nav-item active">
+                        <a href="#dashboard" class="nav-link" onclick="showSection('dashboard')">
+                            <i class="fas fa-tachometer-alt"></i>
+                            <span>Dashboard</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#reservations" class="nav-link" onclick="showSection('reservations')">
+                            <i class="fas fa-calendar-check"></i>
+                            <span>Reservasi</span>
+                            <span class="badge" id="reservationCount">0</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#orders" class="nav-link" onclick="showSection('orders')">
+                            <i class="fas fa-shopping-cart"></i>
+                            <span>Pesanan Online</span>
+                            <span class="badge" id="orderCount">0</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#menu" class="nav-link" onclick="showSection('menu')">
+                            <i class="fas fa-list"></i>
+                            <span>Manajemen Menu</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#settings" class="nav-link" onclick="showSection('settings')">
+                            <i class="fas fa-cog"></i>
+                            <span>Pengaturan</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+            
+            <div class="sidebar-footer">
+                <div class="user-info">
+                    <i class="fas fa-user"></i>
+                    <span id="adminUsername">Admin</span>
+                </div>
+                <button class="logout-btn" onclick="logout()">
+                    <i class="fas fa-sign-out-alt"></i>
+                    Logout
+                </button>
+            </div>
+        </div>
+        
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Header -->
+            <header class="dashboard-header">
+                <div class="header-left">
+                    <button class="menu-toggle" onclick="toggleSidebar()">
+                        <i class="fas fa-bars"></i>
+                    </button>
+                    <h1 id="sectionTitle">Dashboard</h1>
+                </div>
+                
+                <div class="header-right">
+                    <div class="notification">
+                        <button class="notification-btn" onclick="toggleNotifications()">
+                            <i class="fas fa-bell"></i>
+                            <span class="notification-badge" id="notificationCount">0</span>
+                        </button>
+                    </div>
+                    <div class="user-menu">
+                        <button class="user-menu-btn" onclick="toggleUserMenu()">
+                            <i class="fas fa-user-circle"></i>
+                            <span id="currentUser">Admin</span>
+                            <i class="fas fa-chevron-down"></i>
+                        </button>
+                        <div class="user-dropdown" id="userDropdown">
+                            <a href="#profile" onclick="showSection('profile')">
+                                <i class="fas fa-user"></i> Profil
+                            </a>
+                            <a href="#settings" onclick="showSection('settings')">
+                                <i class="fas fa-cog"></i> Pengaturan
+                            </a>
+                            <hr>
+                            <a href="#logout" onclick="logout()">
+                                <i class="fas fa-sign-out-alt"></i> Logout
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </header>
+            
+            <!-- Dashboard Section -->
+            <section id="dashboard-section" class="content-section active">
+                <div class="dashboard-stats">
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-calendar-check"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3 id="totalReservations">0</h3>
+                            <p>Total Reservasi</p>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-shopping-cart"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3 id="totalOrders">0</h3>
+                            <p>Total Pesanan</p>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-users"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3 id="totalCustomers">0</h3>
+                            <p>Total Pelanggan</p>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-dollar-sign"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3 id="totalRevenue">Rp 0</h3>
+                            <p>Total Pendapatan</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="dashboard-content">
+                    <div class="recent-activities">
+                        <h3>Aktivitas Terbaru</h3>
+                        <div id="recentActivities" class="activities-list">
+                            <p class="no-data">Belum ada aktivitas</p>
+                        </div>
+                    </div>
+                    
+                    <div class="quick-actions">
+                        <h3>Aksi Cepat</h3>
+                        <div class="action-buttons">
+                            <button class="btn btn-primary" onclick="showSection('reservations')">
+                                <i class="fas fa-calendar-check"></i>
+                                Lihat Reservasi
+                            </button>
+                            <button class="btn btn-success" onclick="showSection('orders')">
+                                <i class="fas fa-shopping-cart"></i>
+                                Lihat Pesanan
+                            </button>
+                            <button class="btn btn-info" onclick="showSection('menu')">
+                                <i class="fas fa-plus"></i>
+                                Tambah Menu
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Reservations Section -->
+            <section id="reservations-section" class="content-section">
+                <div class="section-header">
+                    <h2>Manajemen Reservasi</h2>
+                    <div class="section-actions">
+                        <input type="text" id="reservationSearch" placeholder="Cari reservasi..." class="search-input">
+                        <select id="reservationFilter" class="filter-select">
+                            <option value="all">Semua Status</option>
+                            <option value="pending">Menunggu</option>
+                            <option value="confirmed">Terkonfirmasi</option>
+                            <option value="cancelled">Dibatalkan</option>
+                            <option value="completed">Selesai</option>
+                        </select>
+                        <button class="btn btn-primary" onclick="refreshReservations()">
+                            <i class="fas fa-sync-alt"></i> Refresh
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="table-container">
+                    <table class="admin-table" id="reservationsTable">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Nama Pelanggan</th>
+                                <th>Tanggal</th>
+                                <th>Waktu</th>
+                                <th>Jumlah Tamu</th>
+                                <th>No. Telepon</th>
+                                <th>Status</th>
+                                <th>Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody id="reservationsTableBody">
+                            <tr>
+                                <td colspan="8" class="no-data">Memuat data reservasi...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+            
+            <!-- Orders Section -->
+            <section id="orders-section" class="content-section">
+                <div class="section-header">
+                    <h2>Manajemen Pesanan Online</h2>
+                    <div class="section-actions">
+                        <input type="text" id="orderSearch" placeholder="Cari pesanan..." class="search-input">
+                        <select id="orderFilter" class="filter-select">
+                            <option value="all">Semua Status</option>
+                            <option value="pending">Menunggu</option>
+                            <option value="processing">Diproses</option>
+                            <option value="ready">Siap</option>
+                            <option value="delivered">Diantar</option>
+                            <option value="completed">Selesai</option>
+                            <option value="cancelled">Dibatalkan</option>
+                        </select>
+                        <button class="btn btn-primary" onclick="refreshOrders()">
+                            <i class="fas fa-sync-alt"></i> Refresh
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="table-container">
+                    <table class="admin-table" id="ordersTable">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Nama Pelanggan</th>
+                                <th>Total Harga</th>
+                                <th>Metode Pembayaran</th>
+                                <th>Status</th>
+                                <th>Tanggal</th>
+                                <th>Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody id="ordersTableBody">
+                            <tr>
+                                <td colspan="7" class="no-data">Memuat data pesanan...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+            
+            <!-- Menu Management Section -->
+            <section id="menu-section" class="content-section">
+                <div class="section-header">
+                    <h2>Manajemen Menu</h2>
+                    <div class="section-actions">
+                        <button class="btn btn-primary" onclick="showAddMenuModal()">
+                            <i class="fas fa-plus"></i> Tambah Menu
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="menu-management">
+                    <div class="menu-categories">
+                        <button class="category-btn active" onclick="filterMenu('all')">Semua</button>
+                        <button class="category-btn" onclick="filterMenu('appetizer')">Appetizer</button>
+                        <button class="category-btn" onclick="filterMenu('main-course')">Main Course</button>
+                        <button class="category-btn" onclick="filterMenu('dessert')">Dessert</button>
+                        <button class="category-btn" onclick="filterMenu('beverage')">Beverage</button>
+                    </div>
+                    
+                    <div class="menu-grid" id="menuItemsGrid">
+                        <!-- Menu items will be loaded here -->
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Settings Section -->
+            <section id="settings-section" class="content-section">
+                <div class="section-header">
+                    <h2>Pengaturan</h2>
+                </div>
+                
+                <div class="settings-content">
+                    <div class="settings-group">
+                        <h3>Jam Operasional</h3>
+                        <div class="setting-item">
+                            <label>Jam Buka:</label>
+                            <input type="time" id="openTime" value="10:00">
+                        </div>
+                        <div class="setting-item">
+                            <label>Jam Tutup:</label>
+                            <input type="time" id="closeTime" value="22:00">
+                        </div>
+                        <button class="btn btn-primary" onclick="updateOperatingHours()">Simpan</button>
+                    </div>
+                    
+                    <div class="settings-group">
+                        <h3>Informasi Restoran</h3>
+                        <div class="setting-item">
+                            <label>Alamat:</label>
+                            <textarea id="restaurantAddress" rows="3">Jl. Kabul No. 123, Jakarta</textarea>
+                        </div>
+                        <div class="setting-item">
+                            <label>No. Telepon:</label>
+                            <input type="tel" id="restaurantPhone" value="(021) 1234-5678">
+                        </div>
+                        <button class="btn btn-primary" onclick="updateRestaurantInfo()">Simpan</button>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+    
+    <!-- Modal for Order Details -->
+    <div id="orderModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Detail Pesanan</h3>
+                <button class="close-modal" onclick="closeModal('orderModal')">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body" id="orderModalBody">
+                <!-- Order details will be loaded here -->
+            </div>
+        </div>
+    </div>
+    
+    <!-- Modal for Reservation Details -->
+    <div id="reservationModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Detail Reservasi</h3>
+                <button class="close-modal" onclick="closeModal('reservationModal')">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body" id="reservationModalBody">
+                <!-- Reservation details will be loaded here -->
+            </div>
+        </div>
+    </div>
+    
+    <!-- Modal for Add Menu -->
+    <div id="addMenuModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Tambah Menu Baru</h3>
+                <button class="close-modal" onclick="closeModal('addMenuModal')">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="addMenuForm">
+                    <div class="form-group">
+                        <label>Nama Menu:</label>
+                        <input type="text" id="newMenuName" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Kategori:</label>
+                        <select id="newMenuCategory" required>
+                            <option value="">Pilih Kategori</option>
+                            <option value="appetizer">Appetizer</option>
+                            <option value="main-course">Main Course</option>
+                            <option value="dessert">Dessert</option>
+                            <option value="beverage">Beverage</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Harga:</label>
+                        <input type="number" id="newMenuPrice" required min="0">
+                    </div>
+                    <div class="form-group">
+                        <label>Deskripsi:</label>
+                        <textarea id="newMenuDescription" rows="3"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>Gambar URL:</label>
+                        <input type="url" id="newMenuImage" placeholder="https://example.com/image.jpg">
+                    </div>
+                    <button type="submit" class="btn btn-primary">Tambah Menu</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+    <script src="admin-script.js"></script>
+</body>
+</html>
